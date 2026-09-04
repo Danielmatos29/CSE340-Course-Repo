@@ -30,7 +30,7 @@ app.set('views', path.join(__dirname, 'src/views'));
 /**
  * Routes
  */
-app.get('/', (req, res) => {
+app.get ('/', (req, res) => {
     const title = 'Home';
     res.render('home', { title });
 });
@@ -44,6 +44,11 @@ app.get('/projects', (req, res) => {
     const title = 'Service Projects';
     res.render('projects', { title });
 });
+
+app.get('/categories', (req, res) => {
+    const title = "Categories";
+    res.render("categories", { title })
+})
 
 app.listen(PORT, () => {
   console.log(`Server is running at http://127.0.0.1:${PORT}`);
