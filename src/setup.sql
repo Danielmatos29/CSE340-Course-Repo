@@ -1,0 +1,52 @@
+CREATE TABLE projects (
+	project_id SERIAL PRIMARY KEY,
+	organization_id INTEGER REFERENCES organizations(organization_id),
+	title VARCHAR(80) NOT NULL,
+	description TEXT NOT NULL,
+	location VARCHAR(255) NOT NULL,
+	"date" DATE NOT NULL
+);
+
+INSERT INTO projects (title, description, location, "date", organization_id)
+VALUES ('Food Bank Inventory Tracker', 'Track donations of canned goods, expiration dates, and distribution schedules.', 
+'Rexburg Community Center, 200 S 1st E', '2024-01-15',
+ 1),
+('Emergency Food Pantry',
+ 'Weekly food distribution for low-income families in the community.',
+ 'Library Room 304, BYU-Idaho Campus', '2025-05-28',
+ 1);
+
+INSERT INTO projects (title, description, location, "date", organization_id) 
+VALUES 
+('Student Tutoring Program', 
+ 'Connect students needing help with math, science, or languages to volunteer tutors.',
+ 'HBLL Room 264 (Library Learning Center)', '2024-04-07',
+ 2),
+
+('Senior Tech Support', 
+ 'Teach seniors how to use smartphones, tablets, and computers.',
+ 'Rexburg Senior Center, 150 N 4th E', '2026-03-12',
+ 2);
+
+INSERT INTO projects (title, description, location, "date", organization_id) 
+VALUES 
+('Campus Community Garden', 
+ 'Manage plot assignments, planting schedules, and harvest tracking.',
+ 'East of Manwaring Center, Plot Area B', '2026-05-18',
+ 3),
+
+('Youth Green Thumb Club', 
+ 'After-school gardening program for middle and high school students.',
+ 'Rexburg City Park Community Garden', '2025-06-02',
+ 3);
+
+CREATE TABLE categories (
+	category_id SERIAL PRIMARY KEY,
+	category_name VARCHAR(150) NOT NULL,
+	project_id INTEGER REFERENCES projects(project_id)
+);
+
+INSERT INTO categories (category_name, project_id)
+VALUES ('Food Security & Hunger Relief', 1), ('Food Security & Hunger Relief', 2),
+	('Education & Technology Support', 3), ('Education & Technology Support', 4),
+	('Sustainability & Community Gardening', 5), ('Sustainability & Community Gardening', 6)

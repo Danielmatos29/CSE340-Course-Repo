@@ -1,4 +1,4 @@
-import db from './db.js'
+import db from './db.js';
 
 const getAllOrganizations = async() => {
     const query = `
@@ -9,6 +9,6 @@ const getAllOrganizations = async() => {
     const result = await db.query(query);
 
     return result.rows;
-}
+};
 
-export { getAllOrganizations }  
+export { getAllOrganizations };
