@@ -25,35 +25,70 @@ CREATE TABLE projects (
 
 INSERT INTO projects (title, description, location, "date", organization_id)
 VALUES ('Food Bank Inventory Tracker', 'Track donations of canned goods, expiration dates, and distribution schedules.', 
-'Rexburg Community Center, 200 S 1st E', '2024-01-15',
+'Rexburg Community Center, 200 S 1st E', '2027-01-15',
  1),
 ('Emergency Food Pantry',
  'Weekly food distribution for low-income families in the community.',
- 'Library Room 304, BYU-Idaho Campus', '2025-05-28',
- 1);
-
-INSERT INTO projects (title, description, location, "date", organization_id) 
-VALUES 
+ 'Library Room 304, BYU-Idaho Campus', '2027-05-28',
+ 1),
 ('Student Tutoring Program', 
  'Connect students needing help with math, science, or languages to volunteer tutors.',
- 'HBLL Room 264 (Library Learning Center)', '2024-04-07',
- 2),
+ 'HBLL Room 264 (Library Learning Center)', '2027-04-07',
+ 1),
 
 ('Senior Tech Support', 
  'Teach seniors how to use smartphones, tablets, and computers.',
- 'Rexburg Senior Center, 150 N 4th E', '2026-03-12',
- 2);
-
-INSERT INTO projects (title, description, location, "date", organization_id) 
-VALUES 
+ 'Rexburg Senior Center, 150 N 4th E', '2027-03-12',
+ 1),
 ('Campus Community Garden', 
  'Manage plot assignments, planting schedules, and harvest tracking.',
- 'East of Manwaring Center, Plot Area B', '2026-05-18',
- 3),
+ 'East of Manwaring Center, Plot Area B', '2027-05-18',
+ 1),
 
 ('Youth Green Thumb Club', 
  'After-school gardening program for middle and high school students.',
- 'Rexburg City Park Community Garden', '2025-06-02',
+ 'Rexburg City Park Community Garden', '2027-06-02',
+ 1),
+ ('Digital Literacy Workshop',
+ 'Teach basic computer skills and internet safety to community members.',
+ 'Rexburg Public Library, 39 E Main St', '2026-09-15',
+ 2),
+('Coding Bootcamp for Teens',
+ 'Introduce high school students to programming fundamentals using Python.',
+ 'HBLL Room 150, BYU-Idaho Campus', '2026-10-01',
+ 2),
+('Math Tutoring Fair',
+ 'Open tutoring event for students struggling with algebra and calculus.',
+ 'Manwaring Center Ballroom, BYU-Idaho', '2026-11-05',
+ 2),
+('Science Mentorship Program',
+ 'Pair college volunteers with middle school students for hands-on science experiments.',
+ 'Rexburg Middle School, 365 W 4th S', '2026-12-10',
+ 2),
+('Language Exchange Program',
+ 'Connect native English speakers with international students for language practice.',
+ 'BYU-Idaho International Center, Room 201', '2027-01-20',
+ 2),
+
+('Community Composting Initiative',
+ 'Educate residents on composting techniques and manage community compost bins.',
+ 'Rexburg City Park, North Section', '2026-09-22',
+ 3),
+('Urban Beekeeping Workshop',
+ 'Train volunteers on sustainable beekeeping practices to support local pollination.',
+ 'East Campus Agricultural Area, BYU-Idaho', '2026-10-15',
+ 3),
+('Fall Harvest Festival',
+ 'Community event celebrating local produce with cooking demos and garden tours.',
+ 'Rexburg Farmers Market, Center St', '2026-11-01',
+ 3),
+('Water Conservation Garden',
+ 'Design and maintain a drought-resistant demonstration garden for the community.',
+ 'Rexburg City Hall Grounds, 35 N 1st E', '2026-12-05',
+ 3),
+('School Garden Curriculum',
+ 'Develop and teach a garden-based science curriculum for local elementary schools.',
+ 'Jefferson Elementary School, 280 W 4th S', '2027-02-10',
  3);
 
 CREATE TABLE categories (
