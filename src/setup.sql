@@ -59,10 +59,26 @@ VALUES
 CREATE TABLE categories (
 	category_id SERIAL PRIMARY KEY,
 	category_name VARCHAR(150) NOT NULL,
-	project_id INTEGER REFERENCES projects(project_id)
 );
 
-INSERT INTO categories (category_name, project_id)
-VALUES ('Food Security & Hunger Relief', 1), ('Food Security & Hunger Relief', 2),
-	('Education & Technology Support', 3), ('Education & Technology Support', 4),
-	('Sustainability & Community Gardening', 5), ('Sustainability & Community Gardening', 6)
+INSERT INTO categories (category_name)
+VALUES 
+	('Food Security & Hunger Relief'),
+	('Education & Technology Support'),
+	('Sustainability & Community Gardening'),
+	('Health & Wellness Outreach'),
+	('Youth Development & Mentorship');
+
+-- Junction table added for many-to-many relationship in project and categories
+CREATE TABLE project_has_categories (
+	category_id INTEGER REFERENCES categories(category_id) ON DELETE CASCADE,
+	project_id INTEGER REFERENCES projects(project_id) ON DELETE CASCADE,
+	PRIMARY KEY (category_id, project_id)
+);
+
+INSERT INTO project_has_categories (category_id, project_id)
+VALUES (1, 1), (1, 2),
+       (2, 3), (2, 4),
+       (3, 5), (3, 6),
+	   (4, 1), (4, 2),
+       (5, 3), (5, 4);
