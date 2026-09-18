@@ -1,0 +1,13 @@
+<%- include('partials/header') %>
+<main>
+    <h1><%= title %></h1>
+    <h2>Upcoming Service Projects</h2>
+    <ul class="project-list">
+        <% projects.forEach(function(prj) { %>
+            <li>
+                <strong><%=prj.date %>: <%=prj.title %>, <%=prj.name %></strong>
+            </li>
+        <% }); %>
+    </ul>
+</main>
+<%- include('partials/footer') %>

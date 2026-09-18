@@ -1,0 +1,15 @@
+<%- include('partials/header') %>
+<main>
+    <h1><%= title %></h1>
+    <p>Explore our service opportunities by category:</p>
+    <nav class="category-nav">
+        <ul>
+            <% categories.forEach(function(cat) { %>
+                <li>
+                    <strong><%=cat.category_name %></strong>
+                </li>
+            <% }); %>
+        </ul>
+    </nav>
+</main>
+<%- include('partials/footer') %>

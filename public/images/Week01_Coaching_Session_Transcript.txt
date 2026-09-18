@@ -1,0 +1,419 @@
+WEEK 01 COACHING SESSION TRANSCRIPT
+Learning Coach and Software Mentor Session
+=====================================================================
+
+COACH: Welcome! Just to be clear from the start, this is a coaching session, not a test. It is perfectly okay—and even encouraged—to say "I don't know" or "I made a mistake." That's the fastest way we'll learn today.
+
+This is a safe learning space, Daniel — mistakes are how we find the gaps worth closing. Since we're chatting here, whenever we get into code, just paste the relevant snippet in and we'll dig into it together.
+
+We've got four topics to cover today: Express routing, JavaScript language principles, EJS partials/pages, and frontend CSS — but you can lead with whatever feels most natural to start.
+
+So, to kick things off: which part of your server.js are you proudest of, or found trickiest to get working — and could you paste that routing snippet in?
+
+---
+
+STUDENT:
+```javascript
+// console.log("Hello, Node.js!");
+import express from 'express';
+
+import { fileURLToPath } from 'url';
+
+import path from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const NODE_ENV =  process.env.NODE_ENV?.toLowerCase() || 'production';
+const PORT = process.env.PORT || 3000;
+
+const app = express();
+
+/**
+  * Configure Express middleware
+
+  */
+// Serve static files from the public directory
+
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Set EJS as the templating engine
+app.set('view engine', 'ejs');
+
+// Tell Express where to find your templates
+app.set('views', path.join(__dirname, 'src/views'));
+
+/**
+ * Routes
+ */
+app.get ('/', (req, res) => {
+    const title = 'Home';
+    res.render('home', { title });
+});
+
+app.get('/organizations', (req, res) => {
+    const title = 'Our Partner Organizations';
+    res.render('organizations', { title });
+});
+
+app.get('/projects', (req, res) => {
+    const title = 'Service Projects';
+    res.render('projects', { title });
+});
+
+app.get('/categories', (req, res) => {
+    const title = "Categories";
+    res.render("categories", { title })
+})
+
+app.listen(PORT, () => {
+  console.log(`Server is running at http://127.0.0.1:${PORT}`);
+  console.log(`Environment: ${NODE_ENV}`);
+});
+```
+
+Hello, what I'm most proud of my code is that I was able to understand how to make a route and use the .get method to render the webpage of that route, also I was able to understand about res and req. So for example, in the categories route, the request would be when I do something that /categories path and the response would be the output, for example render the website "categories". In other hand, what I found tricky to understand was the __filename and __dirname, and its declarations, also the listen function and the declarations of NODE_ENV and PORT
+
+---
+
+COACH: Nice, thanks for sharing that — solid, clean routing setup.
+
+Let's start with what you said felt trickiest: the `__filename`/`__dirname` lines. Looking at those two lines together — `fileURLToPath(import.meta.url)` and `path.dirname(__filename)` — what do you think each one is actually producing, and why do you think you need both instead of just one?
+
+---
+
+STUDENT: Well, I believe the fileURLToPath(import.meta.url) is importing the url, for e.g the local url so that I can update it later on using the server.js file. The  path.dirname(__filename) is importing actual directory where I'm at based on the root URL.
+
+---
+
+COACH: That's a reasonable guess, but let's untangle it a bit — you're close on the second part, off on the first. Let's isolate just the first line.
+
+`import.meta.url` isn't importing anything from outside — it's a built-in value that JS gives you automatically inside an ES module. What do you think that value actually *contains* — i.e., if you did `console.log(import.meta.url)` right at the top of your file, what kind of string do you think would print out?
+
+---
+
+STUDENT: I don't know
+
+---
+
+COACH: Totally fine — "I don't know" is exactly the right thing to say here, and it's an easy one to test rather than guess.
+
+Here's a hint: `import.meta.url` gives you the *file's own location*, expressed as a `file://` URL (something like `file:///Users/daniel/project/server.js`) — not a website URL, not something you'd visit in a browser.
+
+Given that, why do you think `fileURLToPath()` needs to be called on it before it's useful for something like `path.join(__dirname, 'public')`?
+
+---
+
+STUDENT: Because it is going to run in the server and it must have an URL path instead of a local path. Since we don't people don't have the same computer to test it in the local mode with the same files organizations, they may save a file inside a completely different directory, for example. I can save it in documents and they instead save it in downloads
+
+---
+
+COACH: Let's slow down on this one — I think the direction is flipped from what's actually happening.
+
+`fileURLToPath()` doesn't turn a path into a URL — it does the opposite: it takes that `file://...` URL string and converts it into a normal OS file path (like `/Users/daniel/project/server.js` or `C:\Users\daniel\project\server.js`), which is what functions like `path.dirname()` and `path.join()` expect to work with.
+
+So here's the real question behind why this dance is even necessary: in old-style Node.js (CommonJS, using `require`), `__dirname` was just automatically available — no setup needed. But you're using `import express from 'express'` — ES modules. Why do you think ES modules *don't* give you `__dirname` for free, forcing you to build it yourself from `import.meta.url`?
+
+---
+
+STUDENT: I don't know
+
+---
+
+COACH: No problem — this is genuinely a "just know the fact" kind of gap, not a reasoning failure on your part.
+
+The short answer: `__dirname` and `__filename` were a **CommonJS-only feature** — Node basically injected those variables automatically into every CommonJS file behind the scenes. When Node added support for ES modules (the `import`/`export` syntax you're using), it deliberately did **not** carry that over, partly because ES modules are meant to be usable in browsers too, where there's no such thing as a file path. So `import.meta.url` is the one thing ES modules *do* give you — and then it's on you to convert it into the old-style `__dirname` yourself if you need it. That's exactly what those two lines do, and it's such a common need that it's basically boilerplate you'll see at the top of almost every ES module Node server.
+
+Good — that clears up the trickiest part. Now let's shift into your routes themselves, since you said those felt solid.
+
+Looking at your four `app.get()` routes — they all follow basically the same pattern (define a title, call `res.render`). If you had to add, say, 20 more pages like this, what do you think might become a problem with just copy-pasting this same pattern over and over, and is that something Express gives you tools to avoid?
+
+---
+
+STUDENT: i still don't get the idea of __dirname and __filename
+
+---
+
+COACH: No worries — let's make it concrete instead of abstract, since the words alone don't mean much without seeing actual values.
+
+Imagine your project lives at `/home/daniel/my-app/` and your server file is `server.js`, sitting directly inside that folder.
+
+- `__filename` — the *full path to server.js itself*, i.e. the string `/home/daniel/my-app/server.js`
+- `__dirname` — just the *folder that file lives in*, with the filename chopped off, i.e. `/home/daniel/my-app`
+
+That's it. `__filename` = "where am I, exact file." `__dirname` = "what folder am I sitting in." And `path.dirname()` is literally the function that does that chopping-off — you feed it a file path, it hands back the folder path.
+
+So here's my question: once you have `__dirname` = `/home/daniel/my-app`, why do you think your code then does `path.join(__dirname, 'public')` instead of just writing `'public'` directly in `express.static('public')`?
+
+---
+
+STUDENT: because It needs to go to the directory and find the public folder where all the static files are
+
+---
+
+COACH: That's the right instinct — it needs to *find* that folder — and here's the extra piece that makes it click: if you just wrote `'public'` as a plain relative string, Express would look for it relative to wherever you happened to run the `node server.js` command *from* (your current terminal location), not relative to where `server.js` itself lives. If someone ran that command from a different folder, `'public'` alone could point to the wrong place or nowhere at all. Using `__dirname` locks it to "public folder, right next to my server file, no matter where I launched the command from." That's the whole payoff of the boilerplate.
+
+Good, I think that one's landed. Let's move to your actual routes now — we're still on Topic 1 (Express routing).
+
+Looking at your four `app.get()` calls, they all repeat almost the same shape: set a `title`, call `res.render(page, { title })`. If you had to add 20 more pages like this, what do you think would start to feel painful about copy-pasting this pattern each time, and do you have a guess whether Express gives you any tools to avoid that repetition?
+
+---
+
+STUDENT: No, I don't. What would it be?
+
+---
+
+COACH: Fair enough — let's build it up with a hint rather than me just handing you the pattern.
+
+Think about what's actually *varying* between your four routes versus what's staying the same. The path (`/`, `/organizations`, `/projects`, `/categories`) changes, and the `title` changes, and which template gets rendered changes — but the *shape* of the function is identical every time: grab a title, render a page with that title.
+
+One common approach is a **data-driven route** — instead of four separate `app.get()` calls, you'd have one array or object mapping paths to their titles/templates, and then a single loop (or a small helper function) that registers a route for each entry.
+
+Here's my one question: given that idea, what do you think the tradeoff would be — is turning your four explicit, readable `app.get()` calls into a loop-generated version actually a *good* idea at this stage of your project, or could it make the code harder to follow for someone (including future-you) reading it?
+
+---
+
+STUDENT: It would be a great Idea, because the code will be simple and shorter, It's going to be easier to maintain in the future too
+
+---
+
+COACH: That's true in the abstract, but let's stress-test it against your *actual* situation, because "shorter and more maintainable" isn't automatically true here.
+
+Right now, all four of your routes do the exact same trivial thing: render a template with a title, no other logic. But real apps rarely stay that simple — what happens when, say, `/projects` later needs to also query a database for a list of projects, or `/categories` needs to handle a form submission? If those routes are generated from a loop over a data array, how would you add unique logic to just *one* of them without it getting awkward?
+
+Given that, would you still say the loop is clearly better for a 4-route app like this — or might there be a size/complexity threshold where it starts to pay off?
+
+---
+
+STUDENT: if that's the case, then It wouldn't be a good Idea, since the routes have completely different scopes
+
+---
+
+COACH: Exactly right — that's the real insight: a loop is great when routes are truly uniform, but the moment routes need to diverge (different logic, different data, different validation), forcing them into a generic loop just makes you fight the abstraction. For a 4-route site like yours right now, explicit `app.get()` calls are actually the *better* choice — clear, easy to debug, easy to extend individually. That's a useful rule of thumb to keep: don't abstract until the repetition is actually causing pain.
+
+Alright, that wraps up Topic 1 (Express Routing) nicely. Let's move to Topic 2: JavaScript language principles.
+
+Could you paste a JavaScript function from your project — ideally one with some actual logic in it (not just a one-liner) — that you wrote or modified yourself?
+
+---
+
+STUDENT:
+```javascript
+// Set EJS as the templating engine
+app.set('view engine', 'ejs');
+
+// Tell Express where to find your templates
+app.set('views', path.join(__dirname, 'src/views'));
+```
+
+---
+
+COACH: This is actually just configuration — two `app.set()` calls telling Express which template engine to use and where to find templates. There's no real logic here (no conditionals, loops, calculations, or custom behavior), so it's not quite what I'm looking for to dig into JavaScript language principles like scope, closures, arrow functions, array methods, async/await, etc.
+
+Do you have a function anywhere in your project — maybe client-side JS in a `public/js` file, or something handling form logic, data transformation, or an event listener — that has some actual logic inside it, even a small `if` statement or a loop?
+
+---
+
+STUDENT: app.listen(PORT, () => {
+  console.log(`Server is running at http://127.0.0.1:${PORT}`);
+  console.log(`Environment: ${NODE_ENV}`);
+});
+
+---
+
+COACH: Okay, this one at least has an actual function body we can dig into — the arrow function `() => {...}` passed to `app.listen`.
+
+Let's start with the syntax itself: this is written as an **arrow function** rather than something like `function() {...}`. In your own words, what do you understand an arrow function to be, and why do you think it was used here instead of a regular `function` keyword?
+
+---
+
+STUDENT: Well, the arrow function, it's basically a function that is wrote when something specific is true, for example if PORT == true then it will do the following. I honestly don't remember the difference between regular functions, I will say it's to avoid redundancy and avoid the add unnecesary scopes inside functions
+
+---
+
+COACH: I can see there's a mix-up here — let's clear it up, because arrow functions have nothing to do with conditionals like `if PORT == true`.
+
+An arrow function is just **another way to write a function** — same concept as `function() {}`, just different syntax (and one real behavioral difference around `this`, which we can get to later). It doesn't check anything or run conditionally by itself; it's a value — a block of code — that you're *handing to* `app.listen` as its second argument, and `app.listen` is the one that decides *when* to actually call it (once the server successfully starts).
+
+So here's a simpler question to rebuild from: in `app.listen(PORT, () => { ... })`, when do you think that arrow function actually runs — immediately when your file loads top to bottom, or at some later point?
+
+---
+
+STUDENT: I believ it runs when it loads top to bottom
+
+---
+
+COACH: That's a really common assumption, but it's actually the opposite — and this is a key JS concept called a **callback function**.
+
+Here's the thing: `app.listen(PORT, callback)` starts the process of binding your server to that port — but that takes a small amount of time (setting up the OS-level network socket). Your JS file doesn't pause and wait for that to finish. Instead, you're handing Express that arrow function and saying "once you're actually done setting up and the server is really running, *then* call this." So the two `console.log` lines inside it don't run "on the way down" through your file — they run *later*, as a reaction to the server successfully starting.
+
+This is the same pattern you'll see all over Node: pass a function as an argument, and something else calls it back when an event happens (a request comes in, a file finishes reading, a timer expires) — hence the name "callback."
+
+Does that distinction — "defined now, but *run later* in response to something" — make sense, or is there a part of that still fuzzy?
+
+---
+
+STUDENT: It makes sense now, so it basically just outputs again the url everytime you refresh the code, so that it keeps track of it and save the changes to the url
+
+---
+
+COACH: Let's correct that, because there's a mix-up about *what* triggers this callback.
+
+This callback runs **once** — when the server first starts up (i.e., when you run `node server.js` and it finishes binding to the port). It does *not* run every time someone refreshes a webpage in the browser, and it's not "saving changes to a URL." Refreshing a browser page triggers a completely different thing — a new HTTP request coming in, which would hit one of your `app.get()` route handlers instead (the ones we discussed with `/`, `/organizations`, etc.), not this `listen` callback.
+
+So to separate these two clearly: what do you think is different about *when* `app.listen`'s callback fires versus when one of your `app.get('/organizations', (req, res) => {...})` callbacks fires?
+
+---
+
+STUDENT: The app.listen waits for a change and the app.get is when you refresh the page or you redirect yourself towards another
+
+---
+
+COACH: We're close but let's nail down the *trigger* more precisely, because "waits for a change" isn't quite it either.
+
+`app.listen`'s callback fires from **one single event**: the server successfully starting up and binding to the port. That's it — it happens once, right after you run your file, and never again (unless you restart the server).
+
+`app.get('/organizations', ...)`'s callback fires from a **different kind of event, repeatedly**: every single time a browser (or anything) sends an HTTP GET request to that specific path — `/organizations`. So yes, refreshing the page or navigating there triggers it, but so would someone else's browser hitting that URL, or you visiting it 50 times in one session — it fires fresh, every time, for every visit.
+
+So the real contrast is: **one-time "the app is ready" event** vs. **repeatable "someone just asked for this page" event**. Does that distinction land now?
+
+---
+
+STUDENT: Yes, it does
+
+---
+
+COACH: Great, glad that clicked — that "one-time startup event vs. repeatable per-request event" distinction is genuinely core to how Node servers work, so it's worth having solid.
+
+That wraps up a good chunk of Topic 2 already through the callback discussion. Let's dig into one more JS principle while we're here, using that same snippet.
+
+Look at the console.log lines: `` `Server is running at http://127.0.0.1:${PORT}` ``. What is that backtick syntax with `${PORT}` inside called, and what do you think it's doing differently compared to writing something like `'Server is running at http://127.0.0.1:' + PORT`?
+
+---
+
+STUDENT: you must use placeholders like ${} to store variables when storing or calling a backtick string. Also, when we use placeholders instead of plus sign method, it helps our code maintenance and readability
+
+---
+
+COACH: That's the right idea — you've described the *behavior* well. The proper name for that backtick syntax is a **template literal** (or template string), and `${...}` inside it is called **string interpolation** — you're right that it "stores" or rather *evaluates and inserts* a variable's value directly into the string. And yes, your readability point is exactly why it's preferred over `+` concatenation, especially once you're mixing multiple variables into one string.
+
+Good, that's a solid pass on Topic 2. Let's move to Topic 3: EJS partials and pages.
+
+Could you paste an EJS snippet — ideally something showing either a partial (like a header/footer/nav you're including into multiple pages) or a page that uses some EJS logic (like `<% if %>` or `<% forEach %>`)?
+
+---
+
+STUDENT:
+<%- include('partials/header') %>
+<main>
+    <h1><%= title %></h1>
+    <h2>Welcome to the CSE 340 Service Network!</h2>
+    <p>Our mission is to promote service across the world by connecting volunteers with service opportunities in their community.</p>
+
+    <img class="main-logo" src="images/cse340-service-network.png" alt="CSE 340 Service Network Logo">
+</main>
+<%- include('partials/footer') %>
+
+---
+
+COACH: Good, this is a nice one to dig into — there's an important distinction hiding in here.
+
+Notice you're using two *different* EJS tags: `<%- include(...) %>` on the header/footer lines, but `<%= title %>` for the heading. Both output something into the page, but they use different symbols (`-` vs `=`). What do you understand the difference to be between `<%-` and `<%=`, and why do you think each one was used where it was?
+
+---
+
+STUDENT: The <%- doesn't escape any HTML and the <%= espaces anything, it read it as it is
+
+---
+
+COACH: That's exactly right — nicely put. `<%=` **escapes** HTML (so if `title` somehow contained something like `<b>`, it'd print as literal text `<b>` on the page instead of making it bold), which protects you from things like accidental or malicious HTML/script injection. `<%-` does **not** escape — it outputs raw HTML as-is, which is exactly what you want for `include()`, since you *want* the header/footer's actual HTML tags to render as real HTML, not show up as text on the page.
+
+Good instinct using `<%=` for `title` then — since `title` is just plain text, escaping is the safe default. Now let's connect this to your `partials/header` file specifically.
+
+What kind of content did you put inside `partials/header.ejs` — and why did you decide to break that piece out into its own separate partial file instead of just writing it directly into every page like `home.ejs`, `organizations.ejs`, etc.?
+
+---
+
+STUDENT:
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/organizations">Organizations</a></li>
+            <li><a href="/projects">Projects</a></li>
+            <li><a href="/categories">Categories</a></li>
+        </ul>
+    </nav>
+    
+```
+
+I decided to move in into a partial file because this is where I was going to store all the repetitive html code and outside of it will be the unique files that has unique code
+
+---
+
+COACH: That's a solid grasp of the core idea — avoiding repetition of shared markup (the `<head>`, the nav, the doctype) across every page is exactly the right reason to use a partial. Nicely done.
+
+One thing worth noticing here, though: this file is doing something slightly unusual — it opens `<html>`, `<head>`, `<body>`, and `<nav>` but never closes any of them (no `</body>`, `</html>`). Why do you think it's okay — or maybe *necessary* — for `header.ejs` to leave those tags unclosed, given how you're using `include('partials/header')` in `home.ejs`?
+
+---
+
+STUDENT: because the content hasn't finished yet, if you do that, then it will insert </html or </body right before ending your code
+
+---
+
+COACH: Exactly — you've got it. The header is only the *first half* of the HTML document; it deliberately leaves those tags open because the actual page content (the `<main>` block in `home.ejs`) needs to land *inside* `<body>`, not after it. Then `footer.ejs` presumably closes out `</body>` and `</html>`, completing the structure. So really, `header.ejs` + page content + `footer.ejs` together form one valid, complete HTML document; none of the three pieces is valid HTML on its own, and that's expected.
+
+Good — that covers Topic 3 well. Let's move to our last topic: Topic 4, frontend CSS.
+
+Could you paste a CSS snippet from your `main.css` — ideally something with more than just basic color/font settings, like a layout technique (flexbox, grid, positioning) or a responsive rule (`@media`)?
+
+---
+
+STUDENT: [pasted full main.css file — CSS reset & variables, accessibility/global styles, header/nav, layout/main content, category links/sidebar nav, organizations list, projects list, footer, and mobile responsiveness via @media (max-width: 600px)]
+
+---
+
+COACH: This is genuinely well-organized CSS — nice use of custom properties and a clear section structure.
+
+Let's dig into one clever piece of layout hiding in here: look at `body` (`display: flex; flex-direction: column; min-height: 100vh;`), then `main` (`flex: 1;`), then `footer` (`margin-top: auto;`). Together, these three rules create a common pattern — the "sticky footer" effect, where the footer stays pinned to the bottom of the viewport even on pages with very little content, instead of floating up in the middle of the page.
+
+In your own words, why do you think `main { flex: 1; }` is the key piece that makes this work — what do you think would happen to the layout if you removed just that one line?
+
+---
+
+STUDENT: it basically sets the priority
+
+---
+
+COACH: Let's get more precise than "priority," because that's a bit vague for what's actually happening.
+
+Here's a hint to build from: `flex: 1` is shorthand that mainly sets `flex-grow: 1`. In a flex container (which `body` is, since it has `display: flex; flex-direction: column`), `flex-grow` controls how much a child **expands to fill leftover empty space** in the container.
+
+So think about it this way: `body` is set to `min-height: 100vh` — meaning it's *at least* the full height of the screen. If your page content (nav + main + footer) is short, there's leftover empty space in that 100vh column. Given that `main` has `flex-grow: 1` and nav/footer don't, which element do you think ends up stretching to consume that leftover space?
+
+---
+
+STUDENT: the main
+
+---
+
+COACH: Exactly right — `main` stretches to fill all the leftover vertical space, since it's the only child with `flex-grow: 1`. That's what pushes `footer` down to the very bottom of the viewport even when the page content is short, instead of the footer floating up right under a small amount of text. And that's also why `margin-top: auto` on the footer isn't even strictly necessary here — `main` growing already does the heavy lifting — but it's a nice belt-and-suspenders safeguard.
+
+That covers all four topics nicely. Quick recap of where we landed:
+
+- Express routing: understood __dirname/__filename, the callback nature of app.listen, and correctly reasoned that explicit routes beat premature loop-abstraction for a small app.
+- JS principles: arrow functions as callbacks (not conditionals), template literals/string interpolation.
+- EJS: <%- vs <%= escaping, and why partials intentionally contain unclosed tags.
+- CSS: the flexbox sticky-footer pattern and what flex-grow actually does.
+
+=====================================================================
+END OF SESSION TRANSCRIPT
