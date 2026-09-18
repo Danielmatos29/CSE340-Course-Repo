@@ -17,6 +17,7 @@ const getAllProjects = async() => {
     return result.rows
 };
 
+<<<<<<< HEAD
 const getProjectsByOrganizationId = async (organizationId) => {
       const query = `
         SELECT
@@ -38,3 +39,6 @@ const getProjectsByOrganizationId = async (organizationId) => {
 };
 
 export { getAllProjects, getProjectsByOrganizationId };
+=======
+export { getAllProjects };
+>>>>>>> origin/main
