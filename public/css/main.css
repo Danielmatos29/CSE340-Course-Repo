@@ -3,7 +3,7 @@
    ========================================================================== */
 :root {
   --primary: #0f172a;         /* High-contrast deep navy */
-  --primary-accent: #0d9488;  /* Vibrant teal for CTA/highlights */
+  --primary-accent: #07776e;  /* Vibrant teal for CTA/highlights */
   --primary-hover: #095c54;   /* Darker teal for interaction */
   --bg-main: #f8fafc;         /* Light grey background reduces eye strain */
   --bg-card: #ffffff;         /* Clean white card backgrounds */

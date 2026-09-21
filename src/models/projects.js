@@ -8,13 +8,13 @@ const getAllProjects = async() => {
     p.location,
     TO_CHAR (p.date, 'YYYY-MM-DD') AS date,
     o.organization_id,
-    o.name
-    FROM projects p
-    JOIN organizations o 
+    o.name,
+    FROM projects p,
+    JOIN organizations o,
     ON p.organization_id = o.organization_id;`;
 
     const result = await db.query(query)
-    return result.rows
+    return result.rows.length > 0 ? result.rows : null
 };
 
 const getProjectsByOrganizationId = async (organizationId) => {
@@ -45,18 +45,18 @@ const getUpcomingProjects = async(number_of_projects) => {
     p.location,
     TO_CHAR (p.date, 'YYYY-MM-DD') AS date,
     o.organization_id,
-    o.name,
-    FROM projects p,
-    JOIN organizations o ,
-    ON p.organization_id = o.organization_id,
-    WHERE p.date >= CURRENT_DATE,
-    ORDER BY p.date ASC,
-    LIMIT number_of_projects;`;
+    o.name
+    FROM projects p
+    JOIN organizations o
+    ON p.organization_id = o.organization_id
+    WHERE p.date >= CURRENT_DATE
+    ORDER BY p.date ASC
+    LIMIT $1;`;
   
     const queryParams = [number_of_projects];
     const result = await db.query(query, queryParams);
 
-    return result.rows.length > 0 ? result.rows[0] : null;
+    return result.rows.length > 0 ? result.rows : null;
 }
 
 const getProjectDetails = async(id) => {

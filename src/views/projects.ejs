@@ -6,6 +6,8 @@
         <% projects.forEach(function(prj) { %>
             <li>
                 <strong><%=prj.date %>: <%=prj.title %>, <%=prj.name %></strong>
+                <p><a href="/project/<%=prj.project_id%>"><%= prj.title %> Details</a></p>
+                <p><a href="/organization/<%=prj.organization_id%>"><%= prj.name %> Details</a></p>
             </li>
         <% }); %>
     </ul>
