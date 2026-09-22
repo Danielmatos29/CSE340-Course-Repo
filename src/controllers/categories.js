@@ -7,25 +7,13 @@ const showCategoryPage = async (req, res) => {
     res.render("categories", { title, categories })
 }
 
-const showCategoryDetails = async(req, res) => {
+const showCategoryDetails = async (req, res) => {
     const categoryId = req.params.id;
     const categoryDetails = await getCategoriesByID(categoryId);
+    const projectsByCategory = await getProjectsByCategoryId(categoryId);
 
-    res.render("category", {categoryDetails})
-}
+    const title = "Category Details";
+    res.render("category", { title, categoryDetails, projectsByCategory });
+};
 
-const showCategoriesByProjectId = async(req, res) => {
-    const project_id = req.params.id;
-    const categoriesByProject = await getCategoriesByProjectId(project_id);
-
-    res.render("category", {categoriesByProject})
-}
-
-const showProjectsByCategoryId = async(req, res) => {
-    const category_id = req.params.id;
-    const projectsByCategory = await getProjectsByCategoryId(category_id);
-
-    res.render("category", {projectsByCategory})
-}
-
-export { showCategoryPage, showCategoryDetails, showCategoriesByProjectId, showProjectsByCategoryId };
+export { showCategoryPage, showCategoryDetails };
