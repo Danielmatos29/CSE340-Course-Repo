@@ -13,11 +13,18 @@ const showProjectPage = async (req, res) => {
 
 const showProjectDetailsPage = async(req, res) => {
     const project_id = req.params.id
-    const projectDetails = await getProjectDetails(project_id);
-    const categoriesByProject = await getCategoriesByProjectId(project_id);
+
+    const [projectDetails, categoriesByProject] = await Promise.all([
+        getProjectDetails(project_id),
+        getCategoriesByProjectId(project_id)
+    ]);
+   
     const title = 'Service Project Details';
 
     res.render("project", {title, project_id, projectDetails, categoriesByProject})
 }
 
-export { showProjectPage, showProjectDetailsPage };
+export { 
+    showProjectPage, 
+    showProjectDetailsPage 
+};

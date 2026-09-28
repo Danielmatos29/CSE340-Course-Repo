@@ -9,11 +9,17 @@ const showCategoryPage = async (req, res) => {
 
 const showCategoryDetails = async (req, res) => {
     const categoryId = req.params.id;
-    const categoryDetails = await getCategoriesByID(categoryId);
-    const projectsByCategory = await getProjectsByCategoryId(categoryId);
 
+    const [categoryDetails, projectsByCategory] = await Promise.all([
+        getCategoriesByID(categoryId),
+        getProjectsByCategoryId(categoryId)
+    ]);
+    
     const title = "Category Details";
     res.render("category", { title, categoryDetails, projectsByCategory });
 };
 
-export { showCategoryPage, showCategoryDetails };
+export { 
+    showCategoryPage, 
+    showCategoryDetails 
+};

@@ -46,4 +46,10 @@ const getProjectsByCategoryId = async (categoryID) => {
 
     return result.rows.length > 0 ? result.rows : null;
 };
-export { getAllCategories, getCategoriesByID, getProjectsByCategoryId, getCategoriesByProjectId }
+
+export { 
+    getAllCategories, 
+    getCategoriesByID, 
+    getProjectsByCategoryId, 
+    getCategoriesByProjectId 
+};
