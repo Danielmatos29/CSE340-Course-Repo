@@ -6,9 +6,11 @@
     <p><%=projectDetails.location%></p>
     <p><a href="/organization/<%=projectDetails.organization_id%>"><%=projectDetails.name%></a></p>
     <ul>
+        <% console.log(categoriesByProject) %>
          <% categoriesByProject.forEach(function(category){ %>
             <li><a href="/category/<%=category.category_id%>"><%=category.category_name%></a></li>
-        <% }) %>
+            <% }) %>
     </ul>
+    <p><a href="/edit-project/<%=projectDetails.project_id%>">Edit Service Project</a></p>
 </main>
 <%- include('partials/footer') %>

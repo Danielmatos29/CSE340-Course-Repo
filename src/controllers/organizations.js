@@ -1,4 +1,10 @@
-import { getAllOrganizations, getOrganizationDetails, createOrganization } from "../models/organizations.js";
+import {
+    getAllOrganizations,
+    getOrganizationDetails,
+    createOrganization,
+    updateOrganization
+} from "../models/organizations.js";
+
 import { getProjectsByOrganizationId } from "../models/projects.js";
 // Import validation functions using ES modules
 import { body, validationResult } from 'express-validator';
@@ -9,21 +15,21 @@ const organizationValidation = [
     body('name')
         .trim()
         .notEmpty()
-        .withMessage('Organization name is required')
+        .withMessage('Organization name is required!')
         .isLength({ min: 3, max: 150 })
-        .withMessage('Organization name must be between 3 and 150 characters'),
+        .withMessage('Organization name must be between 3 and 150 characters!'),
     body('description')
         .trim()
         .notEmpty()
-        .withMessage('Organization description is required')
+        .withMessage('Organization description is required!')
         .isLength({ max: 500 })
-        .withMessage('Organization description cannot exceed 500 characters'),
+        .withMessage('Organization description cannot exceed 500 characters!'),
     body('contactEmail')
         .normalizeEmail()
         .notEmpty()
-        .withMessage('Contact email is required')
+        .withMessage('Contact email is required!')
         .isEmail()
-        .withMessage('Please provide a valid email address')
+        .withMessage('Please provide a valid email address!')
 ];
 
 const showOrganizationPage = async (req, res) => {
@@ -83,11 +89,33 @@ const showEditOrganizationForm = async (req, res) => {
     res.render('organization', {title, organizationDetails})
 }
 
+const processEditOrganizationForm = async (req, res) => {
+
+    const results = validationResult(req);
+
+    if (!results.isEmpty()){
+        results.array().forEach((error) => {
+            req.flash('error', error.msg);
+        });
+
+        return res.redirect(`/edit-organization/${req.params.id}`);
+    }
+    const organizationId = req.params.id
+
+    const {name, description, contactEmail, logoFilename} = req.body
+
+    const update = await updateOrganization(organizationId, name, description, contactEmail, logoFilename);
+    
+    req.flash('success', 'Organization updated successfully!');
+    res.redirect(`/organization/${organizationId}`);
+}
+
 export { 
     showOrganizationPage, 
     showOrganizationDetailsPage, 
     showNewOrganizationForm, 
     processNewOrganizationForm, 
     organizationValidation,
-    showEditOrganizationForm
+    showEditOrganizationForm,
+    processEditOrganizationForm
 };
