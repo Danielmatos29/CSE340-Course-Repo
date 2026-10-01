@@ -8,9 +8,9 @@ const getAllProjects = async() => {
     p.location,
     TO_CHAR (p.date, 'YYYY-MM-DD') AS date,
     o.organization_id,
-    o.name,
-    FROM projects p,
-    JOIN organizations o,
+    o.name
+    FROM projects p
+    JOIN organizations o
     ON p.organization_id = o.organization_id;`;
 
     const result = await db.query(query)
@@ -115,7 +115,7 @@ const updateProject = async (project_id, title, description, location, date, org
     throw new Error('Project could not be updated!');
 
   if (process.env.ENABLE_SQL_LOGGING === 'true')
-    console.log('Updated project with ID:', project_id);
+    console.log('Updated project with ID: ', project_id);
 
   return result.rows[0].project_id;
 }

@@ -31,7 +31,7 @@ const getCategoriesByProjectId = async (projectId) => {
 
     const result = await db.query(query, queryParams);
 
-    return result.rows.length > 0 ? result.rows : null;
+    return result.rows;
 };
 
 const getProjectsByCategoryId = async (categoryID) => {
@@ -44,12 +44,12 @@ const getProjectsByCategoryId = async (categoryID) => {
 
     const result = await db.query(query, queryParams);
 
-    return result.rows.length > 0 ? result.rows : null;
+    return result.rows
 };
 
-const assignCategoryToProject   = async(project_id, category_Id) => {
+const assignCategoryToProject = async(project_id, category_Id) => {
     const query = `
-    INSERT INTO project_has_categories
+    INSERT INTO project_has_categories(project_id, category_id)
     VALUES ($1, $2)
     `
 
@@ -67,30 +67,49 @@ const updateCategoryAssignments = async(projectId, categoryIds) => {
 
     // Next, add the new category assignments
     for (const categoryId of categoryIds) {
-        await assignCategoryToProject(categoryId, projectId);
+        await assignCategoryToProject(projectId, categoryId);
     }
 }
 
-const createCategory = async(category_id, category_name) => {
+const createCategory = async(categoryName) => {
     const query = `
-        INSERT INTO categories
-        VALUES ($1, $2)
+        INSERT INTO categories(category_name)
+        VALUES ($1)
         RETURNING category_id;
     `;
 
-    const queryParams = [category_id, category_name];
-
-    const result = await db.query(query, queryParams);
+    const result = await db.query(query, [categoryName]);
 
     if (result.rows.length === 0){
         throw new Error("Failed to create new category!");
     };
 
     if (process.env.ENABLE_SQL_LOGGING === 'true'){
-        console.log("Successfully added new category with ID:", category_id);
-
-        return result.rows[0].category_id;
+        console.log("Successfully added new category with ID:", result.rows[0].category_id);
     }
+
+    return result.rows[0].category_id;
+}
+
+const updateCategory = async (categoryId, categoryName) => {
+    const query = `UPDATE categories
+    SET category_name = $1
+    WHERE category_id = $2
+    RETURNING category_id;
+    `;
+
+    const queryParams = [categoryName, categoryId];
+
+    const result = await db.query(query, queryParams);
+
+    if (result.rows.length === 0){
+        throw new Error("Category could not be updated!");
+    }
+    if (process.env.ENABLE_SQL_LOGGING === 'true'){
+        console.log("Updated category with ID: ", categoryId)
+    }
+
+    return result.rows[0].category_id
 }
 
 export { 
@@ -99,5 +118,6 @@ export {
     getProjectsByCategoryId, 
     getCategoriesByProjectId,
     updateCategoryAssignments,
-    createCategory
+    createCategory,
+    updateCategory
 };

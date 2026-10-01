@@ -69,7 +69,7 @@ const processNewProjectForm = async(req, res) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()){
-        errors.array.forEach((error) => {
+        errors.array().forEach((error) => {
             req.flash('error', error.msg)
         })
 

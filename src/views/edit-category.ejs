@@ -2,20 +2,21 @@
 <main>
     <h1><%= title %></h1>
 
- <form action="/new-category" method="POST">
+ <form action="/edit-category/<%=categories.category_id%>" method="POST">
     <div class="form-group">
-      <label for="name">Category Name</label>
+      <label for="cname">Category Name</label>
       <input
-        type="name"
-        id="name"
-        name="name"
+        type="text"
+        id="cname"
+        name="cname"
         minlength="3" 
-        maxlength="150" 
+        maxlength="150"
+        value = "<%=categories.category_name%>"
         required
       />
     </div>
 
-    <button type="submit">Create Category</button>
+    <button type="submit">Edit Category</button>
   </form>
 
 </main>

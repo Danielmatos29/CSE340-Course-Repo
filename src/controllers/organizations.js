@@ -5,7 +5,7 @@ import {
     updateOrganization
 } from "../models/organizations.js";
 
-import { getProjectsByOrganizationId } from "../models/projects.js";
+import { getProjectsByOrganizationId, getAllProjects } from "../models/projects.js";
 // Import validation functions using ES modules
 import { body, validationResult } from 'express-validator';
 
@@ -84,9 +84,11 @@ const showEditOrganizationForm = async (req, res) => {
     const organizationId = req.params.id; 
     
     const title = "Edit Organization";
-    const organizationDetails = await getOrganizationDetails(organizationId);
-    
-    res.render('organization', {title, organizationDetails})
+    const [ organizationDetails, projects ] = await Promise.all([
+        await getOrganizationDetails(organizationId),
+        await getAllProjects(),
+    ])
+    res.render('edit-organization', {title, organizationDetails, projects})
 }
 
 const processEditOrganizationForm = async (req, res) => {
@@ -102,9 +104,9 @@ const processEditOrganizationForm = async (req, res) => {
     }
     const organizationId = req.params.id
 
-    const {name, description, contactEmail, logoFilename} = req.body
+    const {name, description, contactEmail, logoFile} = req.body
 
-    const update = await updateOrganization(organizationId, name, description, contactEmail, logoFilename);
+    await updateOrganization(organizationId, name, description, contactEmail, logoFile);
     
     req.flash('success', 'Organization updated successfully!');
     res.redirect(`/organization/${organizationId}`);
