@@ -7,11 +7,15 @@
             <% categories.forEach(function(cat) { %>
                 <li>
                     <strong><a href="/category/<%=cat.category_id%>"><%=cat.category_name %></a></strong>
-                    <p><a href="/edit-category/<%=cat.category_id%>">Edit this category</a></p>
+                    <% if (user && user.role_name === 'admin') { %>
+                        <p><a href="/edit-category/<%=cat.category_id%>">Edit this category</a></p>
+                    <% } %>
                 </li>
             <% }); %>
         </ul>
     </nav>
-    <p><a href="/new-category">Add your category!</a></p>
+    <% if (user && user.role_name === 'admin') { %>
+        <p><a href="/new-category">Add your category!</a></p>
+    <% } %>
 </main>
 <%- include('partials/footer') %>

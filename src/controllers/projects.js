@@ -94,8 +94,8 @@ const showEditProjectForm = async(req, res) => {
     const projectId = req.params.id
 
     const [project, organizations] = await Promise.all([
-        await getProjectDetails(projectId),
-        await getAllOrganizations()
+        getProjectDetails(projectId),
+        getAllOrganizations()
     ]);
 
     const title = 'Edit Project'

@@ -128,3 +128,10 @@ VALUES  (7, 2), (8, 2), (9, 2),
 		(13, 1), (14, 3),
 		(15, 4), (15, 1),
 		(16, 3);
+
+-- Roles table defines available roles
+CREATE TABLE roles (
+	role_id SERIAL PRIMARY KEY,
+	role_name VARCHAR(50) UNIQUE NOT NULL,
+	role_description TEXT
+);

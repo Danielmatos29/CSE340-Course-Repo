@@ -85,8 +85,8 @@ const showEditOrganizationForm = async (req, res) => {
     
     const title = "Edit Organization";
     const [ organizationDetails, projects ] = await Promise.all([
-        await getOrganizationDetails(organizationId),
-        await getAllProjects(),
+        getOrganizationDetails(organizationId),
+        getAllProjects(),
     ])
     res.render('edit-organization', {title, organizationDetails, projects})
 }
