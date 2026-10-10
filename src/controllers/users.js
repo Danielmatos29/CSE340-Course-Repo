@@ -2,7 +2,10 @@ import bcrypt from 'bcrypt';
 import { 
     createUser,
     authenticateUser,
-    getAllUsers
+    getAllUsers,
+    volunteerForProject,
+    deleteVolunteerForProject,
+    getVolunteersByUsers
 } from '../models/users.js';
 
 const showUserRegistrationForm = async(req, res) => {
@@ -40,7 +43,7 @@ const processLoginForm = async(req, res) => {
 
     try{
         const user = await authenticateUser(email, password);
-        if (user){
+        if (user !== null){
             req.session.user = user;
             req.flash('success', 'login successful!');
             
@@ -49,6 +52,8 @@ const processLoginForm = async(req, res) => {
             }
             return res.redirect('/dashboard');
         }
+        req.flash('error', "Email or password doesn't match with the account. Please try again");
+        return res.redirect('/login');
     }
     catch(error){
         console.error('Error during login: ', error);
@@ -76,11 +81,12 @@ const requireLogin = async(req, res, next) => {
 
 const showDashboard = async(req, res) => {
     const user = req.session.user
-
+    const volunteeredProjects = await getVolunteersByUsers(user.user_id)
     res.render('dashboard', {
         title: 'Dashboard',
         name: user.name,
-        email: user.email
+        email: user.email,
+        volunteeredProjects
     });
 }
 
@@ -118,6 +124,39 @@ const showAllUsers = async(req, res) => {
         res.redirect('/');
     }
 };
+
+const volunteerProject = async(req, res) => {
+    const userId = req.session.user.user_id;
+    const projectId = req.params.projectId;
+
+    try {
+        await volunteerForProject(userId, projectId);
+        req.flash('success', 'You have successfully volunteered for the project!');
+        return res.redirect(`/project/${projectId}`);
+    }
+    catch (error) {
+        console.error('Error volunteering for project:', error);
+        req.flash('error', 'An error occurred while volunteering for the project. Please try again.');
+        return res.redirect(`/project/${projectId}`);
+    }
+};
+
+const deleteVolunteerProject = async(req, res) => {
+    const userId = req.session.user.user_id;
+    const projectId = req.params.projectId;
+    
+    try {
+        await deleteVolunteerForProject(userId, projectId);
+        req.flash('success', 'You have successfully withdrawn your volunteer application for the project.');
+        return res.redirect(`/dashboard`);
+    }
+    catch (error) {
+        console.error('Error withdrawing volunteer application:', error);
+        req.flash('error', 'An error occurred while withdrawing your volunteer application. Please try again.');
+        return res.redirect(`/dashboard`);
+    }
+};
+
 export {
      showUserRegistrationForm,
      processUserRegistrationForm,
@@ -127,5 +166,7 @@ export {
      requireLogin,
      showDashboard,
      requireRole,
-     showAllUsers
+     showAllUsers,
+     volunteerProject,
+    deleteVolunteerProject
 };

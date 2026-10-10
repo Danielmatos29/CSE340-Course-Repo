@@ -295,6 +295,34 @@ form {
   outline-offset: 2px;
 }
 
+.cancelApplicationForm {
+  border-radius: 5px;
+  padding: 0.5rem;
+  width: fit-content;
+  border: 1px solid rgba(0, 0, 0);
+  margin: 5px;
+  gap: 0;
+};
+
+.cancelApplicationForm p {
+  margin-bottom: 0px;
+}
+
+form button[type="submit"].cancelApplication {
+  align-self: flex-start;
+  font-family: var(--font-family);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: rgb(175, 12, 12);
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1.75rem;
+  margin-bottom: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
 form button[type="submit"] {
   align-self: flex-start;
   font-family: var(--font-family);
@@ -317,7 +345,6 @@ form button[type="submit"]:focus-visible {
   outline: 3px solid var(--focus-ring);
   outline-offset: 3px;
 }
-
 /* Flash message styles */
 .alert {
     padding: 15px;

@@ -11,6 +11,9 @@
             <li><a href="/category/<%=category.category_id%>"><%=category.category_name%></a></li>
             <% }) %>
     </ul>
+    <form action="/projects/<%=projectDetails.project_id%>/volunteer" method="post">
+        <button type="submit">Volunteer to Project</button>
+    </form>
     <% if (user && user.role_name === 'admin') { %>
         <p><a href="/edit-project/<%=projectDetails.project_id%>">Edit Service Project</a></p>
     <% } %>

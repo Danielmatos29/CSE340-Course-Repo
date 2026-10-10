@@ -42,7 +42,9 @@ import {
     requireLogin,
     showDashboard,
     requireRole,
-    showAllUsers
+    showAllUsers,
+    volunteerProject,
+    deleteVolunteerProject
 } from './controllers/users.js';
 
 import { testErrorPage } from './controllers/errors.js';
@@ -85,6 +87,10 @@ router.get('/logout', processLogout);
 router.get('/dashboard', requireLogin, showDashboard);
 // Get all users route (admin only)
 router.get('/users', requireRole('admin'), showAllUsers);
+
+// Volunteer for a project route
+router.post('/projects/:projectId/volunteer', requireLogin, volunteerProject)
+router.post('/projects/:projectId/unvolunteer', requireLogin, deleteVolunteerProject)
 
 // error-handling routes
 router.get('/test-error', testErrorPage);

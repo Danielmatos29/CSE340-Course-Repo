@@ -7,6 +7,17 @@
     <p>Name: <%= name %></p>
     <p>Username: <%= email %></p>
 
+    <h3>Volunteered Projects</h3>
+    <% if (volunteeredProjects !== null) { %>
+        <% volunteeredProjects.forEach(function(prj){ %>
+        <div>
+            <form action="/projects/<%=prj.project_id%>/unvolunteer" method="POST" class="cancelApplicationForm">
+                <p><%=prj.title%></p>
+                <button type="submit" class="cancelApplication">Cancel Volunteer Application</button>
+            </form>
+        </div>
+        <% }) %>
+    <% } %>
     <% if (user && user.role_name === 'admin') { %>
         <p><a href="/users">View users</a></p>
     <% } %>

@@ -72,8 +72,51 @@ const getAllUsers = async() => {
     return result.rows.length > 0 ? result.rows : null;
 }
 
+const volunteerForProject = async(userId, projectId) => {
+    const query = `
+    INSERT INTO project_volunteers (project_id, user_id)
+    VALUES ($1, $2)
+    RETURNING project_id, user_id;
+    `;
+
+    const queryParams = [projectId, userId];
+    const result = await db.query(query, queryParams);
+
+    return result.rows.length > 0 ? result.rows[0] : null;
+}
+
+const deleteVolunteerForProject = async(userId, projectId) => {
+    const query = `
+    DELETE FROM project_volunteers
+    WHERE project_id = $1 AND user_id = $2
+    RETURNING project_id, user_id;
+    `;
+
+    const queryParams = [projectId, userId];
+    const result = await db.query(query, queryParams);
+    
+    return result.rows.length > 0 ? result.rows[0] : null;
+}
+
+const getVolunteersByUsers = async(userId) => {
+    const query = `
+    SELECT pv.project_id, pv.user_id, p.title
+    FROM project_volunteers pv
+    JOIN projects p ON pv.project_id = p.project_id
+    WHERE pv.user_id = $1;
+    `;
+
+    const queryParams = [userId];
+    const result = await db.query(query, queryParams);
+
+    return result.rows.length > 0 ? result.rows : null;
+}
+
 export { 
     createUser,
     authenticateUser,
-    getAllUsers
+    getAllUsers,
+    volunteerForProject,
+    deleteVolunteerForProject,
+    getVolunteersByUsers
   }

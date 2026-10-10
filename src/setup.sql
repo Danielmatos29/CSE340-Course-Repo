@@ -129,9 +129,24 @@ VALUES  (7, 2), (8, 2), (9, 2),
 		(15, 4), (15, 1),
 		(16, 3);
 
+CREATE TABLE users (
+	user_id SERIAL PRIMARY KEY,
+	name VARCHAR(100) UNIQUE NOT NULL,
+	password_hash VARCHAR(100) UNIQUE NOT NULL,
+	email VARCHAR(155) UNIQUE NOT NULL,
+	role_id INTEGER REFERENCES roles(role_id),
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
+
 -- Roles table defines available roles
 CREATE TABLE roles (
 	role_id SERIAL PRIMARY KEY,
 	role_name VARCHAR(50) UNIQUE NOT NULL,
 	role_description TEXT
+);
+
+CREATE TABLE volunteer (
+	project_id INTEGER REFERENCES projects(project_id) ON DELETE CASCADE,
+	user_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
+	PRIMARY KEY(project_id, user_id)
 );
