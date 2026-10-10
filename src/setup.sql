@@ -145,7 +145,7 @@ CREATE TABLE roles (
 	role_description TEXT
 );
 
-CREATE TABLE volunteer (
+CREATE TABLE project_volunteers (
 	project_id INTEGER REFERENCES projects(project_id) ON DELETE CASCADE,
 	user_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
 	PRIMARY KEY(project_id, user_id)
