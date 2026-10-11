@@ -68,7 +68,7 @@ body > nav {
 body > nav ul {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  align-items: center;
   gap: 1.5rem;
   list-style: none;
   max-width: 1200px;
@@ -88,6 +88,40 @@ body > nav a {
 body > nav a:hover {
   background-color: var(--primary-accent);
   color: #ffffff;
+}
+
+/* Push the first auth item (and the rest after it) to the right */
+body > nav li:not(.nav-auth) + .nav-auth {
+  margin-left: auto;
+}
+
+/* Auth links: amber so they stand apart from the teal hover of regular links */
+body > nav .nav-auth a {
+  background-color: #f59e0b;
+  color: var(--primary);
+}
+
+body > nav .nav-auth a:hover {
+  background-color: #fbbf24;
+  color: var(--primary);
+}
+
+/* Hamburger: hidden on desktop */
+.nav-toggle {
+  display: none;
+  background: none;
+  border: 1px solid #ffffff;
+  border-radius: 6px;
+  color: #ffffff;
+  font-size: 1.5rem;
+  line-height: 1;
+  padding: 0.25rem 0.75rem;
+  cursor: pointer;
+}
+
+.nav-toggle:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
 }
 
 /* ==========================================================================
@@ -123,6 +157,12 @@ p {
   font-size: 1.1rem;
   color: var(--text-muted);
   margin-bottom: 1.5rem;
+}
+
+.user-meta {
+  display: block;
+  font-size: 0.95rem;
+  overflow-wrap: anywhere;
 }
 
 /* Images inside Home Page */
@@ -377,10 +417,35 @@ form button[type="submit"]:focus-visible {
    9. Mobile Responsiveness
    ========================================================================== */
 @media (max-width: 600px) {
+  .nav-toggle {
+    display: block;
+    margin-left: auto; /* pushes the button to the right */
+  }
+
+
+  .nav-toggle::before {
+    content: "☰";
+  }
+
+  .nav-toggle[aria-expanded="true"]::before {
+    content: "✕";
+  }
+
   body > nav ul {
+    display: none;
     flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
+    align-items: stretch;
+    text-align: center;
+    gap: 1rem; /* bigger gap between items */
+    margin-top: 1rem;
+  }
+
+  body > nav ul.open {
+    display: flex;
+  }
+
+  body > nav li:not(.nav-auth) + .nav-auth {
+    margin-left: 0;
   }
 
   main {

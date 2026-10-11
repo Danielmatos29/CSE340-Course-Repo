@@ -5,8 +5,9 @@
     <ul class="project-list">
         <% users.forEach(function(user) { %>
             <li>
-                <strong><%=user.name %>: <%=user.email %>, <%=user.role_name %></strong>
-            </li>
+            <strong><%= user.name %></strong>
+            <span class="user-meta"><strong><%= user.email %> · <%= user.role_name %></strong></span>
+        </li>
         <% }); %>
     </ul>
 </main>
