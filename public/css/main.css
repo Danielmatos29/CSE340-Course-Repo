@@ -429,12 +429,8 @@ form button[type="submit"]:focus-visible {
    9. Mobile Responsiveness
    ========================================================================== */
 @media (max-width: 600px) {
-  header {
-    position: relative;
-    z-index: 1000;
-  }
-
   body > nav {
+    position: sticky;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
