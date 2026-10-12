@@ -4,7 +4,7 @@
 :root {
   --primary: #0f172a;         /* High-contrast deep navy */
   --primary-accent: #025c54;  /* Vibrant teal for CTA/highlights */
-  --primary-hover: #033530;   /* Darker teal for interaction */
+  --primary-hover: #011f1c;   /* Darker teal for interaction */
   --bg-main: #f8fafc;         /* Light grey background reduces eye strain */
   --bg-card: #ffffff;         /* Clean white card backgrounds */
   --text-dark: #1e293b;       /* Dark charcoal for high readability text */
@@ -56,6 +56,9 @@ img {
   display: block;
 }
 
+ul {
+   list-style-type:circle;
+}
 /* ==========================================================================
    3. Header & Navigation
    ========================================================================== */
@@ -170,6 +173,11 @@ p {
   max-width: 280px;
   margin: 2rem auto 0;
   border-radius: 8px;
+}
+
+.details {
+  width: 1.4px;
+  text-decoration: underline;
 }
 
 /* ==========================================================================
@@ -413,15 +421,32 @@ form button[type="submit"]:focus-visible {
     border-color: #bee5eb;
 }
 
+.nav-brand {
+  display: none;
+}
+
 /* ==========================================================================
    9. Mobile Responsiveness
    ========================================================================== */
 @media (max-width: 600px) {
-  .nav-toggle {
-    display: block;
-    margin-left: auto; /* pushes the button to the right */
+
+  body > nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between; /* button left, brand right */
   }
 
+  .nav-brand {
+    display: block;
+    color: #fff;
+    font-weight: 600;
+  }
+
+  .nav-toggle { 
+    display: block;
+    margin-left: 0;      /* was auto; the brand now does the pushing */
+  }
 
   .nav-toggle::before {
     content: "☰";
@@ -436,8 +461,10 @@ form button[type="submit"]:focus-visible {
     flex-direction: column;
     align-items: stretch;
     text-align: center;
-    gap: 1rem; /* bigger gap between items */
+    gap: 1rem;
     margin-top: 1rem;
+    width: 100%;
+    order: 3;
   }
 
   body > nav ul.open {
@@ -449,7 +476,7 @@ form button[type="submit"]:focus-visible {
   }
 
   main {
-    padding: 1.5rem;
+    padding: 2rem;
     margin: 1.5rem auto;
   }
 

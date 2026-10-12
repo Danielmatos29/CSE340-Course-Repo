@@ -7,7 +7,7 @@
             <li class="org-item">
                 <a href="/organization/<%=organization.organization_id %>" target="_blank" rel="noopener noreferrer" <%= organization.name %> >
                     <img src="/images/<%= organization.logo_filename %>" alt="<%= organization.name %> Logo" class="org-logo">
-                    <strong><%=organization.name %></strong>: <%= organization.contact_email %>
+                    <strong><%=organization.name %>:</strong> <%= organization.contact_email %>
                 </a>
             </li>
         <% }); %>

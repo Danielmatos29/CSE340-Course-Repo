@@ -4,7 +4,10 @@
     <p><%=projectDetails.description%></p>
     <p><%=projectDetails.date%></p>
     <p><%=projectDetails.location%></p>
+    <h2>Organization:</h2>
     <p><a href="/organization/<%=projectDetails.organization_id%>"><%=projectDetails.name%></a></p>
+    
+    <h2>Categories Related:</h2>
     <ul>
         <% console.log(categoriesByProject) %>
          <% categoriesByProject.forEach(function(category){ %>

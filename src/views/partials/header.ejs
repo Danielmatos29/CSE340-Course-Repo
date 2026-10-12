@@ -9,11 +9,12 @@
 </head>
 <body>
     <nav>
+        <span class="nav-brand">CSE 340 Network</span>
         <button class="nav-toggle" aria-controls="nav-menu" aria-expanded="false" aria-label="Toggle navigation"></button>
         <ul id="nav-menu">
             <li><a href="/">Home</a></li>
             <li><a href="/organizations">Organizations</a></li>
-            <li><a href="/projects">Projects</a></li>
+            <li><a href="/projects">Service Projects</a></li>
             <li><a href="/categories">Categories</a></li>
             <% if (isLoggedIn) { %>
                 <li class="nav-auth"><a href="/logout">Logout</a></li>

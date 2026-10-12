@@ -1,6 +1,7 @@
 <%- include('partials/header') %>
 <main>
     <h1><%=categoryDetails.category_name%></h1>
+    <h2>Service Projects:</h2>
     <ul>
         <% projectsByCategory.forEach(function(project){ %>
             <li><a href="/project/<%= project.project_id %>"><%= project.title %></a></li>
